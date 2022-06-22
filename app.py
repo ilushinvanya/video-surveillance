@@ -37,4 +37,5 @@ def gen_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
 if __name__ == '__main__':
-    app.run(host="192.168.1.100")
+    # app.run(host="192.168.1.100")
+    app.run(debug=True)
