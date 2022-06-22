@@ -20,7 +20,7 @@ def gen_frames():
         if not success:
             break
         else:
-            img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            img_gray = cv2.cvtColor(frame, cv2.cv.COLOR_BGR2GRAY)
 
             faces = face_Cascade.detectMultiScale(
                 img_gray,
