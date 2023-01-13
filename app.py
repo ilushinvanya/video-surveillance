@@ -20,16 +20,16 @@ def gen_frames():
         if not success:
             break
         else:
-            img_gray = cv2.cvtColor(frame, cv2.cv.COLOR_BGR2GRAY)
+            img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             faces = face_Cascade.detectMultiScale(
                 img_gray,
                 scaleFactor=1.1,
                 minNeighbors=1,
-                minSize=(10, 10)
+                minSize=(30, 30)
             )
             for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (155, 0, 0), 1)
 
             ref, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
