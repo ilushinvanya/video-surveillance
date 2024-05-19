@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<title>Websocket video stream client example</title>
+	</head>
+	<body>
+		<div class="container">
+			<button onclick="closeCurrentConnection()">Close</button>
+			<canvas id="canvas" width="1280" height="720"></canvas>
+		</div>
+		<script>
+			function createConnection(websocketAddress) {
+				const c = document.getElementById("canvas");
+				const ctx = c.getContext("2d");
+
+				const websocket = new WebSocket(websocketAddress);
+
+				websocket.onopen = function () {
+					console.log("websocket connected");
+				};
+
+				websocket.onclose = function () {
+					console.log("websocket disconnected");
+				};
+
+				websocket.onmessage = function (evt) {
+					const image = new Image();
+					image.onload = function () {
+						ctx.drawImage(image, 0, 0);
+					};
+					evt.data.text().then((data) => {
+						image.src = "data:image/jpeg;base64," + data;
+					})
+				};
+
+				websocket.onerror = function (evt) {
+					console.log('error: ' + evt.data);
+					websocket.close();
+				};
+
+				return function() {
+					websocket.close()
+				}
+			}
+			// console.log('location', location);
+			// const websocketAddress = "ws://" + hostname + ":8765/media/zurich";
+			const websocketAddress = "ws://192.168.0.6:8765/media/0";
+
+			let currentConnection = createConnection(websocketAddress)
+			function closeCurrentConnection() {
+				currentConnection()
+			}
+
+
+		</script>
+	</body>
+</html>
