@@ -1,10 +1,16 @@
 <html>
 	<head>
 		<title>Websocket video stream client example</title>
+		<style>
+			.container canvas {
+				display: block;
+				margin: 0 auto;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="container">
-			<button onclick="closeCurrentConnection()">Close</button>
+<!--			<button onclick="closeCurrentConnection()">Close</button>-->
 			<canvas id="canvas" width="1280" height="720"></canvas>
 		</div>
 		<script>
@@ -27,6 +33,7 @@
 					image.onload = function () {
 						ctx.drawImage(image, 0, 0);
 					};
+					console.log(evt.data)
 					evt.data.text().then((data) => {
 						image.src = "data:image/jpeg;base64," + data;
 					})
@@ -42,7 +49,7 @@
 				}
 			}
 			// console.log('location', location);
-			// const websocketAddress = "ws://" + hostname + ":8765/media/zurich";
+			// const websocketAddress = "ws://" + location.hostname + ":8765/media/0";
 			const websocketAddress = "ws://192.168.0.6:8765/media/0";
 
 			let currentConnection = createConnection(websocketAddress)

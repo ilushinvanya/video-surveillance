@@ -7,13 +7,8 @@ import threading
 import time
 import asyncio
 import base64
+
 face_Cascade = cv2.CascadeClassifier("resources/haarcascade_frontalface_default.xml")
-
-
-STREAMS = {
-    "0": 0,
-    # "1": 1
-}
 
 
 class Camera(threading.Thread):
@@ -26,7 +21,7 @@ class Camera(threading.Thread):
         print(ret)
 
     def run(self):
-        print("Started streaming from {{ self.url }}")
+        print('Started streaming from ' + str(self.url))
         self.frame_n = 0
         while True:
             self.frame_n += 1
@@ -52,9 +47,31 @@ class Camera(threading.Thread):
             self.frame = base64.b64encode(buffer_img)
 
 
+def clear_capture(capture):
+    capture.release()
+    cv2.destroyAllWindows()
+
+
+def get_available_cameras():
+    available_cameras = {}
+
+    for i in range(10):
+        try:
+            cap = cv2.VideoCapture(i)
+            ret, frame = cap.read()
+            cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            clear_capture(cap)
+            available_cameras[str(i)] = i
+
+        except:
+            clear_capture(cap)
+            break
+    return available_cameras
+
+
 cameras = {
-    camera: Camera(url) for camera,
-    url in STREAMS.items()}
+    camera: Camera(url) for camera, url in get_available_cameras().items()
+}
 
 
 async def media_server(websocket, path):
