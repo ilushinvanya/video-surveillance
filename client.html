@@ -1,0 +1,82 @@
+<html>
+	<head>
+		<title>Websocket video stream client example</title>
+		<style>
+			.container canvas {
+				display: block;
+				margin: 0 auto;
+			}
+			input {
+                padding: 10px;
+				width: 300px;
+			}
+            button {
+                padding: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<input id="wsUrl" type="text" value="ws://127.0.0.1:8765/media/0"/>
+			<button onclick="init()">Start</button>
+			<canvas id="canvas" width="1280" height="720"></canvas>
+		</div>
+		<script>
+			const createConnection = (websocketAddress) => {
+				const c = document.getElementById('canvas');
+				const ctx = c.getContext('2d');
+
+				const websocket = new WebSocket(websocketAddress);
+
+				websocket.onopen = () => {
+					console.log('websocket connected');
+				};
+
+				websocket.onclose = () => {
+					console.log('websocket disconnected');
+				};
+
+				websocket.onmessage = (evt) => {
+					const image = new Image();
+					image.onload = () => {
+						ctx.drawImage(image, 0, 0);
+					};
+					try {
+						evt.data.text().then((data) => {
+							image.src = 'data:image/jpeg;base64,' + data;
+						})
+					}
+					catch {
+						image.src = ''
+					}
+				};
+
+				websocket.onerror = (evt) => {
+					console.log('error: ' + evt.data);
+					websocket.close();
+				};
+
+				return {
+					close: () => {
+						websocket.close()
+					}
+				}
+			}
+
+
+
+			let currentConnection;
+
+			function init() {
+				if(currentConnection?.close) {
+					currentConnection.close()
+				}
+				const websocketAddress = document.getElementById('wsUrl').value;
+				currentConnection = createConnection(websocketAddress)
+			}
+
+			init()
+
+		</script>
+	</body>
+</html>
