@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<style>
+        #container {
+			display: flex;
+		}
+		iframe {
+			width: 1280px;
+			height: 720px;
+			border: 0;
+		}
+		#add-frame-btn {
+            position: absolute;
+            background: #673ffd;
+            padding: 20px 34px;
+            bottom: 0;
+            left: 0;
+            border-radius: 50px;
+            font-size: 50px;
+            color: white;
+            border: 1px black solid;
+		}
+	</style>
+</head>
+<body>
+	<button id="add-frame-btn" onclick="addFrame()">+</button>
+	<div id="container">
+		<iframe src="client.html"></iframe>
+	</div>
+	<script>
+		const addFrame = () => {
+			const frameElement = document.createElement('iframe')
+			frameElement.src = 'client.html'
+			document.getElementById('container').appendChild(frameElement)
+		}
+	</script>
+</body>
+</html>
